@@ -1,4 +1,7 @@
+using Application.Application.Members.Commands;
 using Domain.Repositories;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +17,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2. Configurar la Inyección de Dependencias (DI)
 // Esto le dice a la app: "Cuando alguien pida un IMemberRepository, entrégale una instancia de MemberRepository"
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<CreateMemberCommandHandler>();
+builder.Services.AddScoped<IUnitOfWork, AppDbContext>();
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateMemberCommandValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

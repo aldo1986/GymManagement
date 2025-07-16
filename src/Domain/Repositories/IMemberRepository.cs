@@ -14,5 +14,6 @@ namespace Domain.Repositories
         Task AddAsync(Member member);
         //Task DeleteAsync(int id);
         //Task UpdateAsync(Member member);
+        Task<bool> IsEmailUniqueAsync(string email);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Repositories;
+﻿using Application.Application.Members.Commands;
+using Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -8,10 +9,13 @@ namespace Api.Controllers;
 public class MembersController : ControllerBase
 {
     private readonly IMemberRepository _memberRepository;
+    private readonly CreateMemberCommandHandler _createMemberCommandHandler;
 
-    public MembersController(IMemberRepository memberRepository)
+    public MembersController(IMemberRepository memberRepository,
+        CreateMemberCommandHandler createMemberCommandHandler)
     {
-        _memberRepository = memberRepository;
+        memberRepository = memberRepository;
+        _createMemberCommandHandler = createMemberCommandHandler;
     }
 
     [HttpGet("{id}")]
@@ -23,5 +27,11 @@ public class MembersController : ControllerBase
             return NotFound();
         }
         return Ok(member);
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateMember([FromBody] CreateMemberCommand command)
+    {
+        var memberId = await _createMemberCommandHandler.Handle(command);
+        return CreatedAtAction(nameof(GetMemberById), new { id = memberId }, null);
     }
 }
