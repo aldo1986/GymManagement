@@ -38,9 +38,7 @@ namespace Application.Application.Members.Commands
             };
 
             await _memberRepository.AddAsync(member);
-            await _memberRepository.AddAsync(member);
             await _unitOfWork.SaveChangesAsync();
-
             return member.Id;
         }
     }

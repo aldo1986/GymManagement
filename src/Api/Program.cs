@@ -1,12 +1,11 @@
 using Application.Application.Members.Commands;
+using Application.Application.Members.Queries;
 using Domain.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configurar la conexión a PostgreSQL
@@ -19,6 +18,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<CreateMemberCommandHandler>();
 builder.Services.AddScoped<IUnitOfWork, AppDbContext>();
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(GetMemberByIdQuery).Assembly));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
