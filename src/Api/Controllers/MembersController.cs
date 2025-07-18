@@ -48,4 +48,23 @@ public class MembersController : ControllerBase
         await _sender.Send(command);
         return NoContent();
     }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMember(int id)
+    {
+        var command = new DeleteMemberCommand(id);
+
+        await _sender.Send(command);
+
+        // Al igual que en la actualización, devolvemos 204 No Content
+        return NoContent();
+    }
+    [HttpGet] // Sin parámetros, responde a la ruta base del controlador
+    public async Task<IActionResult> GetAllMembers()
+    {
+        var query = new GetAllMembersQuery();
+
+        var members = await _sender.Send(query);
+
+        return Ok(members);
+    }
 }

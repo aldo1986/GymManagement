@@ -34,5 +34,9 @@ namespace Infrastructure.Persistence.Repositories
             // AnyAsync es muy eficiente, se detiene tan pronto como encuentra una coincidencia.
             return !await _context.Members.AnyAsync(m => m.Email == email);
         }
+        public void Delete(Member member)
+        {
+            _context.Members.Remove(member);
+        }
     }
 }
