@@ -16,8 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2. Configurar la Inyección de Dependencias (DI)
 // Esto le dice a la app: "Cuando alguien pida un IMemberRepository, entrégale una instancia de MemberRepository"
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IMembershipTypeRepository, MembershipTypeRepository>();
 builder.Services.AddScoped<CreateMemberCommandHandler>();
 builder.Services.AddScoped<IUnitOfWork, AppDbContext>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetMemberByIdQuery).Assembly));
 
