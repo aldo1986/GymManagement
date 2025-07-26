@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
 {
-    public class AppDbContext : DbContext, IUnitOfWork
+    public class AppDbContext : IdentityDbContext<IdentityUser>, IUnitOfWork
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

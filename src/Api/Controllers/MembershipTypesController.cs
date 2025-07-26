@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Application.MembershipTypes.Commands;// Asegúrate de tener este using
 
 namespace Api.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class MembershipTypesController : ControllerBase
