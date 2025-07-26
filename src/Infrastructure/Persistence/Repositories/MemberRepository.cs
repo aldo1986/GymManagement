@@ -29,5 +29,14 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _context.Members.FindAsync(id);
         }
+        public async Task<bool> IsEmailUniqueAsync(string email)
+        {
+            // AnyAsync es muy eficiente, se detiene tan pronto como encuentra una coincidencia.
+            return !await _context.Members.AnyAsync(m => m.Email == email);
+        }
+        public void Delete(Member member)
+        {
+            _context.Members.Remove(member);
+        }
     }
 }
