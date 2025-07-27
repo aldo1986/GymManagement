@@ -1,0 +1,90 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Components.Authorization
+@using WebApp.Services
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@inject IHttpClientFactory HttpClientFactory
+@inject TokenService TokenService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+
+<h3>Iniciar Sesión</h3>
+
+<div class="card" style="max-width: 500px;">
+    <div class="card-body">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">
+                @errorMessage
+            </div>
+        }
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private string? errorMessage;
+
+    private async Task HandleLogin()
+    {
+        errorMessage = null;
+        var httpClient = HttpClientFactory.CreateClient("Api");
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("api/auth/login", loginModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<LoginResult>();
+                var token = result?.Token;
+
+                if (!string.IsNullOrEmpty(token))
+                {
+                    TokenService.SetToken(token);
+
+                    // 2. Convierte (cast) la clase base a tu tipo específico para llamar al método
+                    var customAuthStateProvider = (CustomAuthStateProvider)AuthStateProvider;
+                    customAuthStateProvider.NotifyUserAuthentication(token);
+
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+            else
+            {
+                errorMessage = "Credenciales inválidas.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error de conexión: {ex.Message}";
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public class LoginResult
+    {
+        public string? Token { get; set; }
+    }
+}

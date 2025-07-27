@@ -2,10 +2,12 @@
 using Application.Application.Members.Commands;
 using Application.Application.Members.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class MembersController : ControllerBase
