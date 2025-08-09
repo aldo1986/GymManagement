@@ -11,5 +11,6 @@ namespace Domain.Repositories
     {
         Task AddAsync(MembershipType membershipType);
         Task<MembershipType?> GetByIdAsync(int id);
+        Task<IEnumerable<MembershipType>> GetAllAsync();
     }
 }

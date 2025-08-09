@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Application.MembershipTypes.Commands;
-using Microsoft.AspNetCore.Authorization;// Asegúrate de tener este using
+using Microsoft.AspNetCore.Authorization;
+using Application.MembershipTypes.Queries;
 
 namespace Api.Controllers;
 [Authorize]
@@ -34,5 +35,12 @@ public class MembershipTypesController : ControllerBase
     {
         // Lógica para obtener el tipo de membresía por ID (se implementará después)
         return Ok($"Lógica pendiente para obtener el tipo de membresía {id}");
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAllMembershipTypes()
+    {
+        var query = new GetAllMembershipTypesQuery();
+        var result = await _sender.Send(query);
+        return Ok(result);
     }
 }

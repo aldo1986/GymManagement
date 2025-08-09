@@ -22,4 +22,8 @@ public class MembershipTypeRepository : IMembershipTypeRepository
     {
         return await _context.MembershipTypes.FindAsync(id);
     }
+    public async Task<IEnumerable<MembershipType>> GetAllAsync()
+    {
+        return await _context.MembershipTypes.ToListAsync();
+    }
 }
